@@ -1,10 +1,12 @@
 extern crate gtk;
 extern crate gio;
 
-use gtk::prelude::*;
 use gio::prelude::*;
 
-use gtk::{Application, ApplicationWindow, Button};
+use gtk::Application;
+
+mod graphic;
+use graphic::MainWindow;
 
 fn main() {
     let application = Application::new(
@@ -13,17 +15,9 @@ fn main() {
     ).expect("Failed to initialize GTK application");
 
     application.connect_activate(|app| {
-        let window = ApplicationWindow::new(app);
-        window.set_title("Chess exercises organizer");
-        window.set_default_size(350, 70);
-
-        let button = Button::with_label("Click me!");
-        button.connect_clicked(|_| {
-            println!("Clicked!");
-        });
-        window.add(&button);
-
-        window.show_all();
+        let window = MainWindow::new(app);
+        window.build();
+        window.show();
     });
 
     application.run(&[]);
