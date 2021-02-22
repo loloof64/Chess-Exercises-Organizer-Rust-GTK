@@ -16,7 +16,7 @@ impl MainWindow {
         window.set_title("Chess exercises organizer");
         window.set_default_size(350, 70);
 
-        let chess_board = ChessBoard::new(60i32);
+        let chess_board = ChessBoard::new(40i32);
 
         MainWindow {
             window,
