@@ -1,4 +1,4 @@
-use cairo::Context;
+use cairo::{Context, FontFace, FontWeight};
 use gtk::DrawingArea;
 
 use gtk::prelude::*;
@@ -28,6 +28,7 @@ impl ChessBoard {
     fn draw(context: &Context, cells_size: i32) {
         ChessBoard::draw_background(context);
         ChessBoard::draw_cells(context, cells_size);
+        ChessBoard::draw_coordinates(context, cells_size);
     }
 
     fn draw_background(context: &Context) {
@@ -42,6 +43,64 @@ impl ChessBoard {
                 ChessBoard::set_cell_color(context, row, col);
                 ChessBoard::paint_cell(context, row, col, cells_size);
             }
+        }
+    }
+
+    fn draw_coordinates(context: &Context, cells_size: i32) {
+        let ascii_uppercase_a = 65u8;
+        let ascii_1 = 49u8;
+        let coordinates_color = (255f64 / 255f64, 199f64 / 255f64, 0f64);
+
+        let font_size = 0.35 * cells_size as f64;
+        let old_font_face = context.get_font_face();
+
+        context.set_source_rgb(
+            coordinates_color.0,
+            coordinates_color.1,
+            coordinates_color.2,
+        );
+        context.set_font_size(font_size);
+        context.set_font_face(&FontFace::toy_create(
+            old_font_face
+                .toy_get_family()
+                .expect("Failed to get current font family")
+                .as_str(),
+            old_font_face.toy_get_slant(),
+            FontWeight::Bold,
+        ));
+
+        for col in 0..8 {
+            let file = col;
+            let coordinate = (ascii_uppercase_a + file) as char;
+            let coordinate = format!("{}", coordinate);
+            let coordinate = coordinate.as_str();
+
+            let x = (cells_size as f64) * (0.9 + col as f64);
+            let y1 = (cells_size as f64) * 0.35;
+            let y2 = (cells_size as f64) * 8.85;
+
+            context.move_to(x, y1);
+            context.show_text(coordinate);
+
+            context.move_to(x, y2);
+            context.show_text(coordinate);
+        }
+
+        for row in 0..8 {
+            let rank = 7 - row;
+            let coordinate = (ascii_1 + rank) as char;
+            let coordinate = format!("{}", coordinate);
+            let coordinate = coordinate.as_str();
+
+            let y = (cells_size as f64) * (1.2 + row as f64);
+            let x1 = (cells_size as f64) * 0.15;
+            let x2 = (cells_size as f64) * 8.65;
+
+            context.move_to(x1, y);
+            context.show_text(coordinate);
+
+            context.move_to(x2, y);
+            context.show_text(coordinate);
         }
     }
 
