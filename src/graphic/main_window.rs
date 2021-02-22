@@ -1,9 +1,13 @@
-use gtk::{ApplicationWindow, Button};
+use gtk::{ApplicationWindow};
 
 use gtk::prelude::*;
 
+
+use super::chess_board::ChessBoard;
+
 pub struct MainWindow {
     window: ApplicationWindow,
+    chess_board: ChessBoard,
 }
 
 impl MainWindow {
@@ -12,17 +16,16 @@ impl MainWindow {
         window.set_title("Chess exercises organizer");
         window.set_default_size(350, 70);
 
+        let chess_board = ChessBoard::new(60i32);
+
         MainWindow {
             window,
+            chess_board,
         }
     }
 
     pub fn build(&self) {
-        let button = Button::with_label("Click me!");
-        button.connect_clicked(|_| {
-            println!("Clicked!");
-        });
-        self.window.add(&button);
+        self.window.add(self.chess_board.get_canvas_ref());
     }
 
     pub fn show(&self) {
