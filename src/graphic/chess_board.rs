@@ -37,27 +37,32 @@ impl ChessBoard {
     }
 
     fn draw_cells(context: &Context, cells_size: i32) {
+        for row in 0..8 {
+            for col in 0..8 {
+                ChessBoard::set_cell_color(context, row, col);
+                ChessBoard::paint_cell(context, row, col, cells_size);
+            }
+        }
+    }
+
+    fn set_cell_color(context: &Context, cell_row: i32, cell_col: i32) {
         let (white_cell_red, white_cell_green, white_cell_blue) =
             (255f64 / 255f64, 206f64 / 255f64, 158f64 / 255f64);
         let (black_cell_red, black_cell_green, black_cell_blue) =
             (209f64 / 255f64, 139f64 / 255f64, 71f64 / 255f64);
 
-        for row in 0..8 {
-            for col in 0..8 {
-                // set color
-                let is_white_cell = (row + col) % 2 == 0;
-                if is_white_cell {
-                    context.set_source_rgb(white_cell_red, white_cell_green, white_cell_blue);
-                } else {
-                    context.set_source_rgb(black_cell_red, black_cell_green, black_cell_blue);
-                }
-
-                // paint
-                let cell_x = (cells_size as f64) * (0.5 + (col as f64));
-                let cell_y = (cells_size as f64) * (0.5 + (row as f64));
-                context.rectangle(cell_x, cell_y, cells_size as f64, cells_size as f64);
-                context.fill();
-            }
+        let is_white_cell = (cell_row + cell_col) % 2 == 0;
+        if is_white_cell {
+            context.set_source_rgb(white_cell_red, white_cell_green, white_cell_blue);
+        } else {
+            context.set_source_rgb(black_cell_red, black_cell_green, black_cell_blue);
         }
+    }
+
+    fn paint_cell(context: &Context, cell_row: i32, cell_col: i32, cells_size: i32) {
+        let cell_x = (cells_size as f64) * (0.5 + (cell_col as f64));
+        let cell_y = (cells_size as f64) * (0.5 + (cell_row as f64));
+        context.rectangle(cell_x, cell_y, cells_size as f64, cells_size as f64);
+        context.fill();
     }
 }
